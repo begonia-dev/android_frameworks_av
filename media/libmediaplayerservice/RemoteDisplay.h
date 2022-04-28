@@ -27,15 +27,20 @@
 namespace android {
 
 struct ALooper;
-struct ANetworkSession;
+struct MtkANetworkSession;
 class IRemoteDisplayClient;
-struct WifiDisplaySource;
+struct MtkWifiDisplaySource;
 
 struct RemoteDisplay : public BnRemoteDisplay {
     RemoteDisplay(
             const String16 &opPackageName,
             const sp<IRemoteDisplayClient> &client,
             const char *iface);
+    RemoteDisplay(
+        const String16 &opPackageName,
+        const sp<IRemoteDisplayClient> &client,
+        const char *iface,
+        const uint32_t wfdFlags);
 
     virtual status_t pause();
     virtual status_t resume();
@@ -47,8 +52,8 @@ protected:
 private:
     sp<ALooper> mNetLooper;
     sp<ALooper> mLooper;
-    sp<ANetworkSession> mNetSession;
-    sp<WifiDisplaySource> mSource;
+    sp<MtkANetworkSession> mNetSession;
+    sp<MtkWifiDisplaySource> mSource;
 
     DISALLOW_EVIL_CONSTRUCTORS(RemoteDisplay);
 };
@@ -56,4 +61,5 @@ private:
 }  // namespace android
 
 #endif  // REMOTE_DISPLAY_H_
+
 
