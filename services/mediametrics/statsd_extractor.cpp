@@ -68,22 +68,6 @@ bool statsd_extractor(const std::shared_ptr<const mediametrics::Item>& item,
         metrics_proto.set_tracks(tracks);
     }
 
-    std::string entry_point_string;
-    stats::mediametrics_message::ExtractorData::EntryPoint entry_point =
-            stats::mediametrics_message::ExtractorData_EntryPoint_OTHER;
-    if (item->getString("android.media.mediaextractor.entry", &entry_point_string)) {
-      if (entry_point_string == "sdk") {
-        entry_point = stats::mediametrics_message::ExtractorData_EntryPoint_SDK;
-      } else if (entry_point_string == "ndk-with-jvm") {
-        entry_point = stats::mediametrics_message::ExtractorData_EntryPoint_NDK_WITH_JVM;
-      } else if (entry_point_string == "ndk-no-jvm") {
-        entry_point = stats::mediametrics_message::ExtractorData_EntryPoint_NDK_NO_JVM;
-      } else {
-        entry_point = stats::mediametrics_message::ExtractorData_EntryPoint_OTHER;
-      }
-      metrics_proto.set_entry_point(entry_point);
-    }
-
     std::string serialized;
     if (!metrics_proto.SerializeToString(&serialized)) {
         ALOGE("Failed to serialize extractor metrics");
@@ -107,7 +91,7 @@ bool statsd_extractor(const std::shared_ptr<const mediametrics::Item>& item,
             << " format:" << format
             << " mime:" << mime
             << " tracks:" << tracks
-            << " entry_point:" << entry_point_string << "(" << entry_point << ")"
+            //<< " entry_point:" << entry_point_string << "(" << entry_point << ")"
             // TODO: Add MediaExtractor log_session_id
             // << " log_session_id:" << log_session_id
 
