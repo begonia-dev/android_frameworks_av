@@ -39,8 +39,7 @@ enum {
     SETMEDIACAS,
     NAME,
     GETMETRICS,
-    SETENTRYPOINT,
-    SETLOGSESSIONID
+    SETENTRYPOINT
 };
 
 class BpMediaExtractor : public BpInterface<IMediaExtractor> {
@@ -151,13 +150,6 @@ public:
         data.writeInt32(static_cast<int32_t>(entryPoint));
         return remote()->transact(SETENTRYPOINT, data, &reply);
     }
-
-    virtual status_t setLogSessionId(const String8& logSessionId) {
-        Parcel data, reply;
-        data.writeInterfaceToken(BpMediaExtractor::getInterfaceDescriptor());
-        data.writeString8(logSessionId);
-        return remote()->transact(SETLOGSESSIONID, data, &reply);
-    }
 };
 
 IMPLEMENT_META_INTERFACE(MediaExtractor, "android.media.IMediaExtractor");
@@ -257,16 +249,6 @@ status_t BnMediaExtractor::onTransact(
                 setEntryPoint(EntryPoint(entryPoint));
             }
             return err;
-        }
-        case SETLOGSESSIONID: {
-            ALOGV("setLogSessionId");
-            CHECK_INTERFACE(IMediaExtractor, data, reply);
-            String8 logSessionId;
-            status_t status = data.readString8(&logSessionId);
-            if (status == OK) {
-              setLogSessionId(logSessionId);
-            }
-            return status;
         }
         default:
             return BBinder::onTransact(code, data, reply, flags);
